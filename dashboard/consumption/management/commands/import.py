@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
-from dashboard.consumption.models.consumption import Consumption
-from dashboard.consumption.models.user import User
-from dashboard.dashboard import settings
+from consumption.models.consumption import Consumption
+from consumption.models.user import User
+from dashboard import settings
 from datetime import datetime
 import glob
 import csv
@@ -13,9 +13,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        data_dir = os.path.join(
+            os.path.dirname(settings.BASE_DIR),
+            'data'
+        )
+
         user_path = os.path.join(
-            settings.BASE_DIR,
-            'data',
+            data_dir,
             'user_data.csv'
         )
 
@@ -30,8 +34,7 @@ class Command(BaseCommand):
                 user.save()
 
         consumption_path = os.path.join(
-            settings.BASE_DIR,
-            'data',
+            data_dir,
             'consumption',
             '*.csv'
         )
