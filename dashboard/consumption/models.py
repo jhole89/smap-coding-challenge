@@ -19,3 +19,10 @@ class User(models.Model):
     id = models.IntegerField(primary_key=True)
     area = models.CharField(max_length=2, choices=AREA)
     tariff = models.CharField(max_length=2, choices=TARIFF)
+
+
+class Consumption(models.Model):
+
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField()
+    consumption = models.FloatField()
