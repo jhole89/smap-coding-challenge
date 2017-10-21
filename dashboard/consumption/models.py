@@ -27,7 +27,8 @@ class Consumption(models.Model):
     timestamp = models.DateTimeField()
     consumption = models.FloatField()
 
-    def get_total(self, user):
+    @classmethod
+    def get_total(cls, user):
 
         user_consumptions = Consumption.objects.filter(user_id=user)
 
@@ -38,7 +39,8 @@ class Consumption(models.Model):
 
         return total_consumptions
 
-    def get_average(self, user):
+    @classmethod
+    def get_average(cls, user):
 
         user_consumptions = Consumption.objects.filter(user_id=user)
 
