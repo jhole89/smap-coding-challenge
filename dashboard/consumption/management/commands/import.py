@@ -30,6 +30,8 @@ class Command(BaseCommand):
         with open(user_path, 'r') as user_data:
             reader = csv.DictReader(user_data, delimiter=',')
 
+            u_counter = 0
+
             for u_counter, record in enumerate(reader):
                 user = User()
                 user.id = int(record['id'])
@@ -57,6 +59,8 @@ class Command(BaseCommand):
 
             with open(con_file, 'r') as con_data:
                 reader = csv.DictReader(con_data, delimiter=',')
+
+                c_counter = 0
 
                 for c_counter, record in enumerate(reader):
 
