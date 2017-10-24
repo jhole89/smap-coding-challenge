@@ -2,6 +2,163 @@
 
 {% block content %}
 
-<h1>{{message}}</h1>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 
+<div style="width: 50%;">
+    <canvas id="area-multi-chart" height="450" width="600"></canvas>
+</div>
+<div style="width: 50%;">
+    <canvas id="tariff-multi-chart" height="450" width="600"></canvas>
+</div>
+
+<div id="showData"></div>
+
+<script type="text/javascript">
+
+function usageByArea(json_data) {
+  var data = d3.nest()
+    .key(function(d) { return d.area; })
+    .rollup(function(v) {
+        return {
+            sum_total: d3.sum(v, function(d) { return d.total_consumption; }),
+            sum_avg: d3.sum(v, function(d) { return d.avg_consumption; })
+        };
+    })
+    .entries(json_data)
+
+    return data
+}
+
+function usageByTariff(json_data) {
+  var data = d3.nest()
+    .key(function(d) { return d.tariff; })
+    .rollup(function(v) { return {
+      sum_total: d3.sum(v, function(d) { return d.total_consumption; }),
+      sum_avg: d3.sum(v, function(d) { return d.avg_consumption; })
+    }; })
+    .entries(json_data);
+
+    return data
+}
+
+function getMultiChartData(chartData) {
+
+    var colour = d3.scale.linear()
+      .domain([0, 0.5, 1])
+      .range(["red", "yellow", "blue"]);
+
+    var keyLabels = chartData.map(function(d) { return d.key; });
+
+    var totalBackgroundColours = keyLabels.map(function(d) {
+        return colour(keyLabels.indexOf(d)/keyLabels.length) });
+
+    var avgBackgroundColours = keyLabels.map(function(d) {
+        return colour(0.1+(keyLabels.indexOf(d)/keyLabels.length)) });
+
+    var groupedData = {
+        labels: keyLabels,
+        datasets: [{
+            label: "Total Consumption",
+            backgroundColor: totalBackgroundColours,
+            yAxisID: "total-axis",
+            data: chartData.map(function(d) { return d.values.sum_total; })
+        }, {
+            label: "Average Consumption",
+            backgroundColor: avgBackgroundColours,
+            yAxisID: "avg-axis",
+            data: chartData.map(function(d) { return d.values.sum_avg; })
+        }]
+    };
+
+    return groupedData
+}
+
+function drawMultiChart(idTag, multiChartData, headerText) {
+
+    return new Chart(document.getElementById(idTag), {
+        type: 'bar',
+        data: multiChartData,
+        options: {
+            responsive: true,
+            legend: { display: false },
+            title: {
+                display: true,
+                text: headerText
+            },
+            scales: {
+                yAxes: [{
+                    type: "linear",
+                    display: true,
+                    position: "left",
+                    id: "total-axis",
+                }, {
+                    type: "linear",
+                    display: true,
+                    position: "right",
+                    id: "avg-axis",
+                    gridLines: {
+                        drawOnChartArea: false
+                    }
+                }
+                ]
+            }
+        }
+    });
+}
+
+
+var parsed_data = {{ data|safe }};
+
+var groupedArea = usageByArea(parsed_data);
+var groupedTariff = usageByTariff(parsed_data);
+
+var groupedAreaData = getMultiChartData(groupedArea);
+var groupedTariffData = getMultiChartData(groupedTariff);
+
+
+drawMultiChart("area-multi-chart", groupedAreaData, 'Energy Consumption per Area');
+drawMultiChart("tariff-multi-chart", groupedTariffData, 'Energy Consumption per Tariff');
+
+
+function createTableFromJSON(jsonData) {
+
+    var col = [];
+    for (var i = 0; i < jsonData.length; i++) {
+        for (var key in jsonData[i]) {
+            if (col.indexOf(key) === -1) {
+                col.push(key);
+            }
+        }
+    }
+
+    var table = document.createElement("table");
+
+    var tr = table.insertRow(-1);
+
+    for (var i = 0; i < col.length; i++) {
+        var th = document.createElement("th");
+        th.innerHTML = col[i];
+        tr.appendChild(th);
+    }
+
+    for (var i = 0; i < jsonData.length; i++) {
+
+        tr = table.insertRow(-1);
+
+        for (var j = 0; j < col.length; j++) {
+            var tabCell = tr.insertCell(-1);
+            tabCell.innerHTML = jsonData[i][col[j]];
+        }
+    }
+
+    var divContainer = document.getElementById("showData");
+    divContainer.innerHTML = "";
+    divContainer.appendChild(table);
+}
+
+createTableFromJSON(parsed_data);
+
+</script>
 {% endblock %}
