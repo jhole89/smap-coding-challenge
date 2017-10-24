@@ -3,25 +3,28 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from models import Consumption
 from models import User
+import json
 
 # Create your views here.
 
 
 def summary(request):
 
-    all_users = User.objects.all().values('id', 'area', 'tariff')
+    all_users = User.objects.all()
     user_data = []
 
     for user in all_users:
 
         user_data.append({
             'id': user.id,
+            'area': user.area,
+            'tariff': user.tariff,
             'total_consumption': Consumption.get_total(user),
-            'avg_consumption': Consumption.get_average(user),
+            'avg_consumption': int(Consumption.get_average(user)),
         })
 
     context = {
-        'data': user_data,
+        'data': json.dumps(user_data),
     }
     return render(request, 'consumption/summary.html', context)
 
