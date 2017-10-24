@@ -44,11 +44,14 @@ class Consumption(models.Model):
 
         user_consumptions = Consumption.objects.filter(user_id=user)
 
-        avg_consumption = 0.0
+        consumptions = []
 
-        for record_count, consumption_record in enumerate(user_consumptions):
-            avg_consumption += consumption_record.consumption
+        for consumption_record in user_consumptions:
+            consumptions.append(consumption_record.consumption)
 
-        avg_consumption = avg_consumption/float(record_count)
+        if consumptions:
+            avg_consumption = sum(consumptions)/float(len(consumptions))
+        else:
+            avg_consumption = 0.0
 
         return avg_consumption
