@@ -8,6 +8,11 @@ import pytest
 
 @pytest.mark.django_db
 def test_save_user():
+    """
+    unittest for models.User creation and save
+
+    :return: None
+    """
 
     test_id = 1000
     test_area = 'a1'
@@ -23,6 +28,12 @@ def test_save_user():
 
 @pytest.mark.django_db
 def test_save_consumption(testing_user):
+    """
+    unittest for model.Consumption creation and save
+
+    :param (models.User object) testing_user: an instance of the User class
+    :return: None
+    """
 
     test_id = testing_user
     test_timestamp = datetime(
@@ -41,6 +52,14 @@ def test_save_consumption(testing_user):
 
 @pytest.mark.django_db
 def test_get_total(testing_user, consumption_record_1, consumption_record_2):
+    """
+    unittest for calculation of total consumption per User
+
+    :param (models.User object) testing_user: an instance of the User class
+    :param (models.Consumption object) consumption_record_1: an instance of the Consumption class
+    :param (models.Consumption object) consumption_record_2: an instance of the Consumption class
+    :return: None
+    """
 
     testing_user.save()
     consumption_record_1.save()
@@ -52,7 +71,15 @@ def test_get_total(testing_user, consumption_record_1, consumption_record_2):
 
 
 @pytest.mark.django_db
-def test_get_total(testing_user, consumption_record_1, consumption_record_2):
+def test_get_avg(testing_user, consumption_record_1, consumption_record_2):
+    """
+    unittest for calculation of average consumption per User
+
+    :param (models.User object) testing_user: an instance of the User class
+    :param (models.Consumption object) consumption_record_1: an instance of the Consumption class
+    :param (models.Consumption object) consumption_record_2: an instance of the Consumption class
+    :return: None
+    """
 
     testing_user.save()
     consumption_record_1.save()

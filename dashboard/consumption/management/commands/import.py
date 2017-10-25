@@ -12,6 +12,14 @@ class Command(BaseCommand):
     help = 'import data'
 
     def handle(self, *args, **options):
+        """
+        command line method for ETL of user and consumption data from csv to default database
+        (see dashboard/settings.py to configure the engine)
+
+        :param args: args
+        :param options: kwargs
+        :return: None
+        """
 
         stdlogger = logging.getLogger(__name__)
 

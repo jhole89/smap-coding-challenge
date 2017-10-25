@@ -4,6 +4,15 @@ from django.db import models
 
 
 class User(models.Model):
+    """
+    The User class model with attributes:
+
+        :id (int) integer ID field and primary key
+        :area (str) string area field (a1|a2)
+        :tariff (str) string tarrif field (t1|t2|t3)
+
+    :return: None
+    """
 
     AREA = (
         ('a1', 'area1'),
@@ -22,6 +31,15 @@ class User(models.Model):
 
 
 class Consumption(models.Model):
+    """
+    The Consumption class model with attributes:
+
+        :user_id (model.User object) instance of User model and foreign key
+        :timestamp (str) string datetime field
+        :consumption (float) energy consumption used within timestamp
+
+    :return: None
+    """
 
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
@@ -29,6 +47,12 @@ class Consumption(models.Model):
 
     @classmethod
     def get_total(cls, user):
+        """
+        Get total consumption given a User
+
+        :param user: (model.User object) an instance of User class
+        :return: (float) total User consumption
+        """
 
         user_consumptions = Consumption.objects.filter(user_id=user)
 
@@ -41,6 +65,12 @@ class Consumption(models.Model):
 
     @classmethod
     def get_average(cls, user):
+        """
+        Get average (mean) consumption given a User
+
+        :param user: (model.User object) an instance of User class
+        :return: (float) average User consumption
+        """
 
         user_consumptions = Consumption.objects.filter(user_id=user)
 

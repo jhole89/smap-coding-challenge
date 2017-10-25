@@ -5,10 +5,14 @@ from models import Consumption
 from models import User
 import json
 
-# Create your views here.
-
 
 def summary(request):
+    """
+    Summary view to parse user-aggregated data to frontend
+
+    :param request: GET request
+    :return: rendered JSON object
+    """
 
     all_users = User.objects.all()
     user_data = []
