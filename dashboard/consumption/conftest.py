@@ -38,4 +38,3 @@ def consumption_record_2(testing_user):
             year=2017, month=6, day=2, hour=14, minute=30, second=45),
         consumption=1750.25
     )
-

@@ -17,7 +17,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Consumption',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
                 ('timestamp', models.DateTimeField()),
                 ('consumption', models.FloatField()),
             ],
@@ -26,13 +30,21 @@ class Migration(migrations.Migration):
             name='User',
             fields=[
                 ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('area', models.CharField(choices=[('a1', 'area1'), ('a2', 'area2')], max_length=2)),
-                ('tariff', models.CharField(choices=[('t1', 'tariff1'), ('t2', 'tariff2'), ('t3', 'tariff3')], max_length=2)),
+                ('area', models.CharField(
+                    choices=[('a1', 'area1'), ('a2', 'area2')],
+                    max_length=2)),
+                ('tariff', models.CharField(
+                    choices=[('t1', 'tariff1'),
+                             ('t2', 'tariff2'),
+                             ('t3', 'tariff3')],
+                    max_length=2)),
             ],
         ),
         migrations.AddField(
             model_name='consumption',
             name='user_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='consumption.User'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='consumption.User'),
         ),
     ]
